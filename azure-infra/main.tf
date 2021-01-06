@@ -18,6 +18,7 @@ module "k8s-infra" {
   vnet_address_space = "10.0.0.0/16"
   subnets = {
     snet1 = "10.0.0.0/19"
+    snet2 = "10.0.32.0/19"
   }
 
   nsgs      = []
