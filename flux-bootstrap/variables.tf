@@ -1,8 +1,3 @@
-variable "kube_config_path" {
-  description = "The path to the kubeconfig"
-  type = string
-}
-
 variable "git_url" {
   description = "The URL of the git repository"
   type        = string
