@@ -19,6 +19,7 @@ module "k8s-infra" {
   subnets = {
     snet1 = "10.0.0.0/19"
     snet2 = "10.0.32.0/19"
+    snet3 = "10.0.64.0/19"
   }
 
   nsgs      = []
