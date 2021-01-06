@@ -1,3 +1,15 @@
+data "terraform_remote_state" "infra" {
+  backend = "remote"
+
+  config = {
+    organization = "kubechamp"
+
+    workspaces = {
+      name = "azure-aks-infra"
+    }
+  }
+}
+
 provider "helm" {
   kubernetes {
     config_path = var.kube_config_path
