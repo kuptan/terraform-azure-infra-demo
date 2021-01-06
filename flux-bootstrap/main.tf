@@ -14,9 +14,9 @@ provider "helm" {
   kubernetes {
     host = data.terraform_remote_state.infra.outputs.host
 
-    cluster_ca_certificate = data.terraform_remote_state.infra.outputs.cluster_ca_certificate
-    client_certificate     = data.terraform_remote_state.infra.outputs.client_certificate
-    client_key             = data.terraform_remote_state.infra.outputs.client_key
+    cluster_ca_certificate = base64decode(data.terraform_remote_state.infra.outputs.cluster_ca_certificate)
+    client_certificate     = base64decode(data.terraform_remote_state.infra.outputs.client_certificate)
+    client_key             = base64decode(data.terraform_remote_state.infra.outputs.client_key)
   }
 }
 
@@ -25,9 +25,9 @@ provider "kubernetes" {
 
   host = data.terraform_remote_state.infra.outputs.host
 
-  cluster_ca_certificate = data.terraform_remote_state.infra.outputs.cluster_ca_certificate
-  client_certificate     = data.terraform_remote_state.infra.outputs.client_certificate
-  client_key             = data.terraform_remote_state.infra.outputs.client_key
+  cluster_ca_certificate = base64decode(data.terraform_remote_state.infra.outputs.cluster_ca_certificate)
+  client_certificate     = base64decode(data.terraform_remote_state.infra.outputs.client_certificate)
+  client_key             = base64decode(data.terraform_remote_state.infra.outputs.client_key)
 }
 
 module "flux-bootstrap" {
