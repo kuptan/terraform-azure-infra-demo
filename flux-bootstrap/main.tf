@@ -10,6 +10,17 @@ data "terraform_remote_state" "infra" {
   }
 }
 
+terraform {
+  required_version = ">= 0.13"
+
+  required_providers {
+    kubectl = {
+      source  = "gavinbunney/kubectl"
+      version = ">= 1.7.0"
+    }
+  }
+}
+
 provider "helm" {
   kubernetes {
     host = data.terraform_remote_state.infra.outputs.host
@@ -28,6 +39,13 @@ provider "kubernetes" {
   cluster_ca_certificate = base64decode(data.terraform_remote_state.infra.outputs.cluster_ca_certificate)
   client_certificate     = base64decode(data.terraform_remote_state.infra.outputs.client_certificate)
   client_key             = base64decode(data.terraform_remote_state.infra.outputs.client_key)
+}
+
+provider "kubectl" {
+  host                   = data.terraform_remote_state.infra.outputs.host
+  cluster_ca_certificate = base64decode(data.terraform_remote_state.infra.outputs.cluster_ca_certificate)
+  token                  = data.terraform_remote_state.infra.outputs.token
+  load_config_file       = false
 }
 
 module "flux-bootstrap" {
