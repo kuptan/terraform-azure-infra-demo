@@ -1,14 +1,3 @@
-data "terraform_remote_state" "infra" {
-  backend = "remote"
-
-  config = {
-    organization = "kubechamp"
-
-    workspaces = {
-      name = "azure-aks-infra"
-    }
-  }
-}
 
 terraform {
   required_version = ">= 0.13"
@@ -17,6 +6,17 @@ terraform {
     kubectl = {
       source  = "gavinbunney/kubectl"
       version = ">= 1.7.0"
+    }
+  }
+}
+data "terraform_remote_state" "infra" {
+  backend = "remote"
+
+  config = {
+    organization = "kubechamp"
+
+    workspaces = {
+      name = "azure-aks-infra"
     }
   }
 }

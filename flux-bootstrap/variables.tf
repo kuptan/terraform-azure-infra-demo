@@ -1,3 +1,10 @@
+variable "provider" {
+  description = "The cloud provider name. (Only azure is supported)"
+  type        = string
+
+  default = "azure"
+}
+
 variable "git_url" {
   description = "The URL of the git repository"
   type        = string

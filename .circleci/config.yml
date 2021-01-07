@@ -83,10 +83,14 @@ workflows:
           context: slack-notify
           requires:
             - plan_infra
-      - deploy_infra:
-          # type: approval
+      - hold:
+          type: approval
           requires:
             - plan_infra
+      - deploy_infra:
+          requires:
+            - hold
           context:
             - azure-credentials
             - slack-notify
+      
