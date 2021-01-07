@@ -86,7 +86,7 @@ workflows:
       - deploy_infra:
           type: approval
           requires:
-            - build
+            - plan_infra
           context:
             - azure-credentials
             - slack-notify
