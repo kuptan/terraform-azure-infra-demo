@@ -1,0 +1,92 @@
+## block-kit-builder: https://app.slack.com/block-kit-builder
+
+version: 2.1
+
+orbs:
+  slack: circleci/slack@4.2
+# Define the jobs we want to run for this project
+
+commands:
+  tf_plan:
+    description: "Terraform Plan"
+    parameters:
+      dir:
+        type: string
+        default: "."
+    steps:
+      - checkout
+      - run:
+          name: Plan
+          command: |
+            cd << parameters.dir >>
+            terraform init 
+            terraform validate
+            terraform plan
+            apk add curl jq
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
+          mentions: "@Ibraheem Al Saady"
+      - slack/notify:
+          event: pass
+          template: success_tagged_deploy_1
+      - persist_to_workspace:
+          root: .
+          paths:
+            - << parameters.dir >>
+  tf_deploy:
+    description: "Terraform Apply"
+    parameters:
+      dir:
+        type: string
+        default: "."
+    steps:
+      - attach_workspace:
+          at: .
+      - run:
+          name: Apply
+          command: |
+            cd << parameters.dir >>
+            terraform apply -auto-approve
+            apk add curl jq
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
+          mentions: "@Ibraheem Al Saady"
+      - slack/notify:
+          event: pass
+          template: success_tagged_deploy_1
+
+jobs:
+  plan_infra:
+    docker:
+      - image: hashicorp/terraform:0.14.3
+    steps:
+      - tf_plan:
+          dir: azure-infra
+  
+  deploy_infra:
+    docker:
+      - image: hashicorp/terraform:0.14.3
+    steps:
+      - tf_deploy
+          dir: azure-infra
+# Orchestrate our job run sequence
+workflows:
+  build_and_test:
+    jobs:
+      - plan_infra:
+          context:
+            - azure-credentials
+            - slack-notify
+      - slack/on-hold:
+          context: slack-notify
+          requires:
+            - plan_infra
+      - deploy_infra:
+          type: approval
+          requires:
+            - build
+          context:
+            - azure-credentials
+            - slack-notify
