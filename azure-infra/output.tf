@@ -16,3 +16,8 @@ output "client_key" {
   sensitive = true
   value     = module.aks-cluster.client_key
 }
+
+output "token" {
+  sensitive = true
+  value     = module.aks-cluster.token
+}

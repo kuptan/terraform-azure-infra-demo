@@ -30,6 +30,13 @@ provider "kubernetes" {
   client_key             = base64decode(data.terraform_remote_state.infra.outputs.client_key)
 }
 
+provider "kubectl" {
+  host                   = data.terraform_remote_state.infra.outputs.host
+  cluster_ca_certificate = base64decode(data.terraform_remote_state.infra.outputs.cluster_ca_certificate)
+  token                  = data.terraform_remote_state.infra.outputs.token
+  load_config_file       = false
+}
+
 module "flux-bootstrap" {
   source  = "kube-champ/flux-bootstrap/k8s"
 
