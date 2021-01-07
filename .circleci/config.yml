@@ -73,7 +73,7 @@ jobs:
           dir: azure-infra
 # Orchestrate our job run sequence
 workflows:
-  build_and_test:
+  infra:
     jobs:
       - plan_infra:
           context:
@@ -84,7 +84,7 @@ workflows:
           requires:
             - plan_infra
       - deploy_infra:
-          type: approval
+          # type: approval
           requires:
             - plan_infra
           context:
