@@ -10,6 +10,17 @@ data "terraform_remote_state" "infra" {
   }
 }
 
+terraform {
+  required_version = ">= 0.13"
+
+  required_providers {
+    kubectl = {
+      source  = "gavinbunney/kubectl"
+      version = ">= 1.7.0"
+    }
+  }
+}
+
 provider "helm" {
   kubernetes {
     host = data.terraform_remote_state.infra.outputs.host
