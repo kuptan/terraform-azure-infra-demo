@@ -3,18 +3,23 @@ terraform {
     resource_group_name  = "tf-storage"
     storage_account_name = "azakstfstorage"
     container_name       = "tfstate"
-    key                  = "sshkeys.lab.terraform.tfstate"
+    key                  = "sshkeys.demo.terraform.tfstate"
   }
 }
 
-resource "tls_private_key" "key" {
+resource "tls_private_key" "flux_key" {
+  algorithm = "RSA"
+  rsa_bits  = "2048"
+}
+
+resource "tls_private_key" "sealed_key" {
   algorithm = "RSA"
   rsa_bits  = "4096"
 }
 
-resource "tls_self_signed_cert" "cert" {
+resource "tls_self_signed_cert" "sealed_cert" {
   key_algorithm   = "RSA"
-  private_key_pem = tls_private_key.key.0.private_key_pem
+  private_key_pem = tls_private_key.sealed_key.private_key_pem
 
   subject {
     common_name  = var.common_name

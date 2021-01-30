@@ -1,0 +1,9 @@
+clusters:
+  - name: ops
+    enabled: true
+    env: lab
+    destroy: true
+  - name: workload-1
+    enabled: false
+    env: lab
+    destroy: false

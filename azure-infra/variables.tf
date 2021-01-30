@@ -23,3 +23,20 @@ variable "az_location" {
 
   default = "westeurope"
 }
+
+variable "clusters" {
+  type = map(map(string))
+
+  default = {
+    "ops" = {
+      cluster_version = "1.19.6"
+      subnet          = "snet1"
+      dns_service_ip  = "10.0.192.100"
+    }
+    # "workload-1" = {
+    #   cluster_version = "1.19.6"
+    #   subnet          = "snet2"
+    #   dns_service_ip  = "10.0.192.101"
+    # }
+  }
+}

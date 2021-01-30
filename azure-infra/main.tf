@@ -19,7 +19,6 @@ module "k8s-infra" {
   subnets = {
     snet1 = "10.0.0.0/19"
     snet2 = "10.0.32.0/19"
-    snet3 = "10.0.64.0/19"
   }
 
   nsgs      = []
@@ -27,22 +26,24 @@ module "k8s-infra" {
 }
 
 module "aks-cluster" {
+  for_each = var.clusters
+
   source = "kube-champ/aks/azure"
 
   client_id     = var.client_id
   client_secret = var.client_secret
 
-  name        = "demo"
+  name        = each.key
   environment = var.environment
   az_location = var.az_location
-  subnet_id   = module.k8s-infra.subnets["snet-${var.environment}-snet1"]
+  subnet_id   = module.k8s-infra.subnets["snet-${var.environment}-${each.value.subnet}"]
 
   cluster_network = {
     network_plugin     = "azure"
     network_policy     = "calico"
     service_cidr       = "10.0.192.0/18"
     docker_bridge_cidr = "172.17.0.1/16"
-    dns_service_ip     = "10.0.192.100"
+    dns_service_ip     = each.value.dns_service_ip
     load_balancer_sku  = "Standard"
   }
 }
